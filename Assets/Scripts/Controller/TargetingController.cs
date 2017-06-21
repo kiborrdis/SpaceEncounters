@@ -50,7 +50,7 @@ public class TargetingController : MonoBehaviour {
 
 				target = hit.collider.gameObject;
 
-				GameObject newSelection = Instantiate(selection, target.transform.TransformPoint(Vector3.zero), new Quaternion(), target.transform) as GameObject;
+				GameObject newSelection = Instantiate(selection, target.transform.TransformPoint(new Vector3(0, 1, 0)), new Quaternion(), target.transform) as GameObject;
 				//TODO get rid of this "name" shit
 				newSelection.name = "Selection";
 			}
