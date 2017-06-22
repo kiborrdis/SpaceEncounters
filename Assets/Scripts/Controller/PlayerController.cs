@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour {
     public float rotationSpeed = 60.0f;
     public bool decelerateWithoutControls = false;
 
+    public MotionModel motionModel;
+
     private Vector3 angleVelocity;
 
 	// Use this for initialization
@@ -32,11 +34,34 @@ public class PlayerController : MonoBehaviour {
         applyVelocityChanges();
     }
 
+    void applyModelData(MotionModel.Acceleration accel)
+    {
+        if (motionModel && motionModel.acceleration != accel)
+        {
+            motionModel.acceleration = accel;
+        } 
+    }
+
+    void applyModelData(MotionModel.Rotation rotation)
+    {
+        if (motionModel && motionModel.rotation != rotation)
+        {
+            motionModel.rotation = rotation;
+        }
+    }
+
     void applyHeadingChanges()
     {
         float verticalDelta = Input.GetAxis("Horizontal");
-        Quaternion deltaRotation = Quaternion.Euler(angleVelocity * Time.deltaTime * verticalDelta);
-        playerRigidbody.MoveRotation(playerRigidbody.rotation * deltaRotation);
+        if (verticalDelta != 0)
+        {
+            applyModelData(Mathf.Sign(verticalDelta) > 0 ? MotionModel.Rotation.left : MotionModel.Rotation.right);
+            Quaternion deltaRotation = Quaternion.Euler(angleVelocity * Time.deltaTime * verticalDelta);
+            playerRigidbody.MoveRotation(playerRigidbody.rotation * deltaRotation);
+        } else
+        {
+            applyModelData(MotionModel.Rotation.stale);
+        }
     }
 
     void applyVelocityChanges()
@@ -46,6 +71,8 @@ public class PlayerController : MonoBehaviour {
 
         if (horizontalDelta > 0.3f)
         {
+            applyModelData(MotionModel.Acceleration.forward);
+
             if (playerRigidbody.velocity.magnitude < maxSpeed || Mathf.Abs(Vector3.Angle(playerRigidbody.velocity, heading)) > 1.0f)
             {
                 playerRigidbody.AddForce(heading * accel * Time.deltaTime, ForceMode.VelocityChange);
@@ -53,6 +80,8 @@ public class PlayerController : MonoBehaviour {
         }
         else if (horizontalDelta < -0.3f)
         {
+            applyModelData(MotionModel.Acceleration.backward);
+
             if (playerRigidbody.velocity.magnitude < maxSpeed || Mathf.Abs(Vector3.Angle(playerRigidbody.velocity, -heading)) > 1.0f)
             {
                 playerRigidbody.AddForce(-1 * heading * accel / 2 * Time.deltaTime, ForceMode.VelocityChange);
@@ -60,6 +89,8 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
+            applyModelData(MotionModel.Acceleration.stale);
+
             if (playerRigidbody.velocity.magnitude > cruisingSpeed || decelerateWithoutControls)
             {
                 Vector3 decelerateDirection = -1 * playerRigidbody.velocity.normalized;
