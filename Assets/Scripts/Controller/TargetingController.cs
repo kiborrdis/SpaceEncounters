@@ -40,7 +40,7 @@ public class TargetingController : MonoBehaviour {
 			Ray ray = Camera.main.ScreenPointToRay(mousePos);
 
 			if (Physics.Raycast (ray, out hit, 10000, mask)) {
-				Debug.Log ("Found target");
+				Debug.Log ("Found target " + hit.collider.gameObject + " " + hit.collider.gameObject.name);
 				if (target) {
 					//TODO get rid of this "name" shit
 					Transform oldSelection = target.transform.FindChild("Selection");

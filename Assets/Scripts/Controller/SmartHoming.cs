@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SmartHoming : MonoBehaviour {
-    public float rotationSpeed = 45.0f;
-    public float maxSpeed = 5.0f;
-    public float accel = 1;
+    public TrajectorySolver trajectorySolver;
+    public MotionModel model;
 
-    private float rotationSpeedRad;
-    public Transform target;
-    Rigidbody engine;
-    ParticleSystem engineView;
+    private GameObject target;
+    private Rigidbody objectRigidbody;
+    private Rigidbody targetRigidBody;
 
-    GameObject emission;
-
-    public Transform Target
+    public GameObject Target
     {
         get
         {
@@ -24,107 +20,39 @@ public class SmartHoming : MonoBehaviour {
         set
         {
             target = value;
+
+            targetRigidBody = value.GetComponent<Rigidbody>();
         }
     }
 
 
     // Use this for initialization
     void Awake () {
-        GameObject targetCandidate = GameObject.FindGameObjectWithTag("Target");
+        objectRigidbody = GetComponent<Rigidbody>();
 
-        engine = gameObject.GetComponent<Rigidbody>();
-
-        rotationSpeedRad = rotationSpeed * Mathf.Deg2Rad;
-
-        emission = transform.Find("EngineEmission").gameObject;
-
-        if (emission)
+        if (TargetingController.Instance)
         {
-            engineView = emission.GetComponent<ParticleSystem>();
-        }
+            GameObject targetCandidate = TargetingController.Instance.Target;
 
-        if (targetCandidate)
-        {
-            target = targetCandidate.transform;
+            if (targetCandidate)
+            {
+                Target = targetCandidate;
+            }
         }
 	}
 
-    Vector3 findCollisionSpeedVector()
-    {
-        DummyEnemy dummy = target.GetComponent<DummyEnemy>();
-
-        Vector3 targetSpeed = dummy.Speed;
-        targetSpeed.x -= engine.velocity.x;
-        targetSpeed.y -= engine.velocity.y;
-
-        float dx = target.position.x - transform.position.x;
-        float dy = target.position.z - transform.position.z;
-
-        float k = targetSpeed.x * dy - targetSpeed.z * dx;
-
-        float a = dx * dx + dy * dy;
-        float b = 2 * k * dx;
-        float c = k * k - dy * dy * maxSpeed * maxSpeed;
-
-        float D = b * b - 4 * a * c;
-
-        if (D < 0)
-        {
-            Debug.Log("D is lower than zero!");
-            return Vector3.zero;
-        }
-
-        float r1 = (-b + Mathf.Sqrt(D)) / (2 * a);
-        float r2 = (-b - Mathf.Sqrt(D)) / (2 * a);
-        float vmy;
-
-        if (target.position.z - transform.position.z > 0)
-        {
-            vmy = r1;
-        }
-        else
-        {
-            vmy = r2;
-        }
-
-        float t = dy / (vmy - targetSpeed.z);
-        float vmx = (dx + targetSpeed.x * t) / t;
-        Vector3 missileSpeed = new Vector3(vmx, 0, vmy);
-
-        Debug.DrawRay(transform.position, missileSpeed * t, Color.cyan);
-
-        return missileSpeed;
-    }
-
     // Update is called once per frame
     void Update () {
-
-        GameObject targetCandidate = GameObject.FindGameObjectWithTag("Target");
-
-        if (targetCandidate)
+        if (!target)
         {
-            target = targetCandidate.transform;
+            return;
         }
+        Debug.Log("FOo");
+        TrajectorySolver.Trajectory trajectory = trajectorySolver.calculateTrajectoryFromTo(transform.position, objectRigidbody.velocity, target.transform.position, targetRigidBody.velocity, model.maxSpeed);
 
-        Vector3 desireHeading = findCollisionSpeedVector();
-        desireHeading.Normalize();
+        Debug.DrawLine(transform.position, trajectory.endPoint, Color.cyan);
 
-        Vector3 currentHeading = transform.rotation * Vector3.forward;
-        currentHeading.Normalize();
-
-        Vector3 newHeading = Vector3.RotateTowards(currentHeading, desireHeading, rotationSpeedRad * Time.deltaTime, 0);
-        transform.rotation = Quaternion.LookRotation(newHeading);
-
-
-        if (Vector3.Angle(newHeading, desireHeading) < 1.0f)
-        {
-
-            if (engine.velocity.magnitude < maxSpeed)
-            {
-                engine.AddForce(newHeading * accel * Time.deltaTime, ForceMode.VelocityChange);
-            }
-        }
-        //transform.position = transform.position + missileSpeed * Time.deltaTime;
-
+        model.DesiredVelocity = trajectory.velocity;
+        model.DesiredHeading = trajectory.velocity.normalized;
     }
 }

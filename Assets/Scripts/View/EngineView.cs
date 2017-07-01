@@ -13,12 +13,12 @@ public class EngineView : MonoBehaviour {
 
         static EngineData()
         {
-            accelerations.Add(EngineDirection.forward, new MotionModel.Acceleration[]{ MotionModel.Acceleration.backward });
-            accelerations.Add(EngineDirection.backward, new MotionModel.Acceleration[] { MotionModel.Acceleration.forward });
-            accelerations.Add(EngineDirection.leftfront, new MotionModel.Acceleration[] { MotionModel.Acceleration.right });
-            accelerations.Add(EngineDirection.leftback, new MotionModel.Acceleration[] { MotionModel.Acceleration.right });
-            accelerations.Add(EngineDirection.rightfront, new MotionModel.Acceleration[] { MotionModel.Acceleration.left });
-            accelerations.Add(EngineDirection.rightback, new MotionModel.Acceleration[] { MotionModel.Acceleration.left });
+            accelerations.Add(EngineDirection.forward, new MotionModel.Acceleration[]{ MotionModel.Acceleration.backward, MotionModel.Acceleration.backwardRight, MotionModel.Acceleration.backwardLeft });
+            accelerations.Add(EngineDirection.backward, new MotionModel.Acceleration[] { MotionModel.Acceleration.forward, MotionModel.Acceleration.forwardRight, MotionModel.Acceleration.forwardLeft });
+            accelerations.Add(EngineDirection.leftfront, new MotionModel.Acceleration[] { MotionModel.Acceleration.right, MotionModel.Acceleration.forwardRight, MotionModel.Acceleration.backwardRight });
+            accelerations.Add(EngineDirection.leftback, new MotionModel.Acceleration[] { MotionModel.Acceleration.right, MotionModel.Acceleration.forwardRight, MotionModel.Acceleration.backwardRight });
+            accelerations.Add(EngineDirection.rightfront, new MotionModel.Acceleration[] { MotionModel.Acceleration.left, MotionModel.Acceleration.forwardLeft, MotionModel.Acceleration.backwardLeft });
+            accelerations.Add(EngineDirection.rightback, new MotionModel.Acceleration[] { MotionModel.Acceleration.left, MotionModel.Acceleration.forwardLeft, MotionModel.Acceleration.backwardLeft });
 
             rotations.Add(EngineDirection.forward, new MotionModel.Rotation[] {  });
             rotations.Add(EngineDirection.backward, new MotionModel.Rotation[] {  });
@@ -42,7 +42,7 @@ public class EngineView : MonoBehaviour {
 
         if (!model)
         {
-            Debug.Log("Engine's parent should have MotionModel component");
+            Debug.Log("Engine's parent should have MotionModel component: " + model);
         }
     }
 
