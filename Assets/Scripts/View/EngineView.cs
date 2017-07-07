@@ -32,11 +32,13 @@ public class EngineView : MonoBehaviour {
     public EngineDirection direction;
 
     ParticleSystem particleView;
+    AudioSource audioView;
 
     MotionModel model;
 
     void Start () {
         particleView = GetComponent<ParticleSystem>();
+        audioView = GetComponent<AudioSource>();
 
         model = transform.parent.GetComponent<MotionModel>();
 
@@ -70,10 +72,20 @@ public class EngineView : MonoBehaviour {
     public void Burn ()
     {
         particleView.Play();
+
+        if (audioView)
+        {
+            audioView.Play();
+        }
     }
 
     public void Stale ()
     {
         particleView.Stop();
+
+        if (audioView)
+        {
+            audioView.Stop();
+        }
     }
 }

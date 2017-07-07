@@ -6,6 +6,9 @@ public class SmartHoming : MonoBehaviour {
     public TrajectorySolver trajectorySolver;
     public MotionModel model;
 
+    public GameObject warhead;
+    public float detonationRange;
+
     private GameObject target;
     private Rigidbody objectRigidbody;
     private Rigidbody targetRigidBody;
@@ -41,13 +44,27 @@ public class SmartHoming : MonoBehaviour {
         }
 	}
 
+    void Detonate ()
+    {
+        GameObject warheadEffect = Instantiate(warhead, transform.position, Quaternion.Euler(0, 0, 0)) as GameObject;
+
+        Destroy(gameObject);
+    }
+
     // Update is called once per frame
     void Update () {
         if (!target)
         {
             return;
         }
-        Debug.Log("FOo");
+
+        if (Vector3.Distance(transform.position, target.transform.position) < detonationRange)
+        {
+            Detonate();
+
+            return;
+        }
+
         TrajectorySolver.Trajectory trajectory = trajectorySolver.calculateTrajectoryFromTo(transform.position, objectRigidbody.velocity, target.transform.position, targetRigidBody.velocity, model.maxSpeed);
 
         Debug.DrawLine(transform.position, trajectory.endPoint, Color.cyan);

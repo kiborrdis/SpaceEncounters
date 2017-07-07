@@ -256,7 +256,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1018937875976614}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6829.547, y: 230.98381, z: -5144.6167}
+  m_LocalPosition: {x: -6918.7524, y: 123.89573, z: -5278.6387}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4629341860723242}
@@ -284,7 +284,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1902718410079438}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.65, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4652351276471036}
@@ -409,10 +409,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d66f52f6bdcaed84daedc469c1567dcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 100
-  cruisingSpeed: 80
-  rotationSpeed: 180
-  accel: 15
+  maxSpeed: 80
+  cruisingSpeed: 60
+  rotationSpeed: 100
+  accel: 5
 --- !u!114 &114419486641952996
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -450,6 +450,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trajectorySolver: {fileID: 11400000, guid: 71fc96f7d19eea246a6e147e29874128, type: 2}
   model: {fileID: 114406207442325436}
+  warhead: {fileID: 1526919457008602, guid: 50ac8a20392b4f84c8af440213f9ac20, type: 2}
+  detonationRange: 10
 --- !u!114 &114870466584287904
 MonoBehaviour:
   m_ObjectHideFlags: 1
