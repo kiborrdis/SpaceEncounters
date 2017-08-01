@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 795854eb7940bbc44817e17c48e7df04, type: 3}
+  m_Name: StandartMissile
+  m_EditorClassIdentifier: 
+  motionModelFactory: {fileID: 11400000, guid: 6232dbfbcb3bcb74e96b986757c887ed, type: 2}
+  solver: {fileID: 11400000, guid: 71fc96f7d19eea246a6e147e29874128, type: 2}
+  warheadEffectPrefab: {fileID: 1526919457008602, guid: 50ac8a20392b4f84c8af440213f9ac20,
+    type: 2}
+  detonationDistance: 10
+  detonationAngleThreshold: 180

@@ -101,8 +101,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1545732371565904}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7071.082, y: -346.125, z: -5166.047}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -413, y: 0, z: 260}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4611282701360624}
@@ -305,8 +305,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cf4410afc5b5d841a654df098fbd941, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 0}
-  revealRadius: 43.42
+  publicView: {fileID: 0}
+  publicModelProvider: {fileID: 11400000, guid: 7a6983989323d484ea21926428256c22,
+    type: 2}
+  revealRadius: 120
   viewMeshFilter: {fileID: 33854564966780248}
   ribbonViewMeshFilter: {fileID: 0}
 --- !u!114 &114883978414153338
@@ -320,8 +322,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cf4410afc5b5d841a654df098fbd941, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 0}
-  revealRadius: 13.19
+  publicView: {fileID: 0}
+  publicModelProvider: {fileID: 11400000, guid: 5bb3dfc70151f3e4d8351f61304365e7,
+    type: 2}
+  revealRadius: 45
   viewMeshFilter: {fileID: 33657637780110662}
   ribbonViewMeshFilter: {fileID: 33674143981405082}
 --- !u!135 &135417224205195784

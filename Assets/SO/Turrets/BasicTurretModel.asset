@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bcc30cda44337f46a662588d52dbc09, type: 3}
+  m_Name: BasicTurretModel
+  m_EditorClassIdentifier: 
+  rotationSpeed: 10
+  arcAngle: 90
+  projectile: {fileID: 1148722676627276, guid: 44a5f7040089d104990ad4c366d40e17, type: 2}
+  cooldown: 0.2
+  shootingAngleThreshold: 5
+  power: 100

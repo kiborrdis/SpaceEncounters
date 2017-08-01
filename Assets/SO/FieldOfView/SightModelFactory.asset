@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c925b1e7f0ca6f7458d1e3abd3155576, type: 3}
+  m_Name: SightModelFactory
+  m_EditorClassIdentifier: 
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 16384
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4096
+  meshResolution: 0.4
+  edgeResolveIterations: 10
+  edgeDistanceThreshhold: 0.5
+  borderDist: 0.2
+  borderWidth: 1
+  disableRendering: 0
+  ribbon: 1
+  fan: 1
+  framesBetweenUpdate: 3

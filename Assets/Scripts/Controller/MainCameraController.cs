@@ -4,29 +4,27 @@ using UnityEngine;
 
 public class MainCameraController : MonoBehaviour {
 
+    public CameraModel cameraModel;
+
     public float depth = 10.0f;
     public float height = 10.0f;
 
-    public float minSize = 100.0f;
-    public float maxSize = 1000.0f;
+    private float actualDepth = 10.0f;
+    private float actualHeight = 10.0f;
 
-    public float sizeStep = 50.0f;
+    private float basicOrthoSize;
 
+
+    public float cameraOffset = 150.0f;
     public GameObject objectToFollow;
     Camera mainCamera;
 
 	// Use this for initialization
 	void Start () {
         mainCamera = GetComponent<Camera>();
-
-        if (mainCamera.orthographicSize < minSize)
-        {
-            mainCamera.orthographicSize = minSize;
-        }
-        else if (mainCamera.orthographicSize > maxSize)
-        {
-            mainCamera.orthographicSize = maxSize;
-        }
+        actualHeight = height;
+        actualDepth = depth;
+        basicOrthoSize = mainCamera.orthographicSize;
     }
 
     // Update is called once per frame
@@ -36,15 +34,20 @@ public class MainCameraController : MonoBehaviour {
             return;
         }
 
-
-        setNewPosition();
         handleScaleChanges();
+        setNewPosition();
 	}
 
     void setNewPosition()
     {
+        actualHeight = height * cameraModel.CurrentScale;
+        actualDepth = depth * cameraModel.CurrentScale;
+
         Vector3 objectPosition = objectToFollow.transform.position;
-        Vector3 desiredPosition = new Vector3(objectPosition.x, objectPosition.y + height, objectPosition.z - depth);
+
+        //objectPosition.z -= cameraOffset * cameraModel.CurrentScale;
+
+        Vector3 desiredPosition = new Vector3(objectPosition.x, objectPosition.y + actualHeight, objectPosition.z - actualDepth);
 
         transform.LookAt(objectPosition);
         transform.position = desiredPosition;
@@ -59,18 +62,17 @@ public class MainCameraController : MonoBehaviour {
             return;
         }
 
-        float newOrthoSize = mainCamera.orthographicSize - Mathf.Sign(scrollDelta) * sizeStep;
-
-        if (newOrthoSize < minSize)
+        if(Mathf.Sign(scrollDelta) > 0)
         {
-            mainCamera.orthographicSize = minSize;
-        }
-        else if (newOrthoSize > maxSize)
-        {
-            mainCamera.orthographicSize = maxSize;
+            cameraModel.ZoomIn();
         } else
         {
-            mainCamera.orthographicSize = newOrthoSize;
+            cameraModel.ZoomOut();
+        }
+
+        if (mainCamera.orthographic)
+        {
+            mainCamera.orthographicSize = basicOrthoSize * cameraModel.CurrentScale;
         }
     }
 }

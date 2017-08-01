@@ -7,221 +7,68 @@ public class MosaicScript : MonoBehaviour {
     enum Corners { leftBot, leftTop, rightTop, rightBot };
     public GameObject mosaic;
 
-    List<GameObject> mosaicList;
-    List<Rect> rectList;
+    Dictionary<String, GameObject> partsDict;
     Plane eventPlane;
     int sideSize;
     int halfSize;
     
     // Use this for initialization
     void Start () {
+        partsDict = new Dictionary<string, GameObject>();
         eventPlane = new Plane(Vector3.up, new Vector3(0, 0, 0));
-        mosaicList = new List<GameObject>();
-        rectList = new List<Rect>();
-        this.transform.GetChild(0);
         
-        sideSize = Mathf.RoundToInt(mosaic.transform.lossyScale.x);
+        sideSize = Mathf.RoundToInt(mosaic.transform.lossyScale.x) * 10;
         halfSize = sideSize / 2;
-        Debug.Log(sideSize + " " + halfSize);
-        rectList.Add(new Rect(new Vector2(-halfSize, -halfSize), new Vector2(sideSize, sideSize)));
 	}
 
-    int roundToStep(float number)
+    void fillViewport(Vector2 leftTop, Vector2 rightBot, float minX, float maxX)
     {
-        return halfSize * (int)System.Math.Floor(number / halfSize);
-    }
-    
-
-    Rect findYClosestRect(Vector2 point)
-    {
-        Rect closest = rectList[0];
-        float minDistance = float.PositiveInfinity;
-        bool isBottom = false;
-        bool wasBetween = false;
-
-        foreach (Rect rect in rectList)
+        for (float x = Mathf.Min(leftTop.x, minX); x <= Mathf.Max(rightBot.x, maxX); x += sideSize)
         {
-            float yMin = System.Math.Abs(rect.yMin - point.y);
-            float yMax = Math.Abs(rect.yMax - point.y);
-
-            bool localBetween = point.x > rect.xMin && point.x < rect.xMax;
-
-            float min = System.Math.Min(yMin, yMax);
-
-            if (min < minDistance)
+            for (float y = rightBot.y; y <= leftTop.y; y +=sideSize)
             {
-                minDistance = min;
-                closest = rect;
-                isBottom = minDistance == yMin;
+                String key = Mathf.RoundToInt(x) + ":" + Mathf.RoundToInt(y);
 
-                wasBetween = localBetween;
-            }
-            else if (min == minDistance && !wasBetween)
-            {
-                closest = rect;
-                wasBetween = localBetween;
+                if (!partsDict.ContainsKey(key))
+                {
+                    GameObject newPart = Instantiate(mosaic, new Vector3(x, transform.position.y, y), mosaic.transform.rotation, transform) as GameObject;
+
+                    partsDict.Add(key, newPart);
+                }
             }
         }
-
-        return new Rect(new Vector2(closest.x, closest.y + (isBottom ? -sideSize : sideSize)), new Vector2(sideSize, sideSize));
-    }
-
-    Rect findXClosestRect(Vector2 point)
-    {
-        Rect closest = rectList[0];
-        float minDistance = float.PositiveInfinity;
-        bool isLeft = false;
-        bool wasBetween = false;
-
-        foreach (Rect rect in rectList)
-        {
-            float xMin = Math.Abs(rect.xMin - point.x);
-            float xMax = Math.Abs(rect.xMax - point.x);
-
-            bool localBetween = point.y > rect.yMin && point.y < rect.yMax;
-
-            float min = Math.Min(xMin, xMax);
-
-            if (min < minDistance)
-            {
-                minDistance = min;
-                closest = rect;
-                isLeft = minDistance == xMin;
-
-                wasBetween = localBetween;
-            } else if (min == minDistance && !wasBetween) {
-                closest = rect;
-                wasBetween = localBetween;
-            }
-
-            
-        }
-
-        return new Rect(new Vector2(closest.x + (isLeft ? -sideSize : sideSize), closest.y), new Vector2(sideSize, sideSize));
-    }
-
-    bool isInFilledZone(Vector2 point)
-    {
-        bool isContains = false;
-
-        foreach (Rect rect in rectList)
-        {
-            isContains = isContains || rect.Contains(point);
-
-            if (isContains)
-            {
-                return true;
-            }
-        }
-
-        return isContains;
-    }
-
-    bool isInXFilledZone(Vector2 point)
-    {
-        bool isContains = false;
-
-        foreach (Rect rect in rectList)
-        {
-            //Debug.Log("Point XMIN" + rect.xMin + " XMAX " + rect.xMax + " TARGET " + point.x);
-            isContains = isContains || (point.x > rect.xMin && point.x < rect.xMax);
-
-            if (isContains)
-            {
-                return true;
-            }
-        }
-
-        return isContains;
-    }
-
-    bool isInYFilledZone(Vector2 point)
-    {
-        bool isContains = false;
-
-        foreach (Rect rect in rectList)
-        {
-            //Debug.Log("Point YMIN" + rect.yMin + " YMAX " + rect.yMax + " TARGET " + point.y);
-            isContains = isContains || (point.y > rect.yMin && point.y < rect.yMax);
-
-            if (isContains)
-            {
-                return true;
-            }
-        }
-
-        return isContains;
-    }
-
-    void instantiateNew(Vector2 point, Corners corner)
-    {
-        if (!isInXFilledZone(point))
-        {
-            Rect xOffer = findXClosestRect(point);
-            //Debug.Log("not in X" + ' ' + xOffer.x + 50 + ' ' + xOffer.y + 50);
-            GameObject newMosaicX = Instantiate(mosaic, new Vector3(xOffer.x + halfSize, transform.position.y, xOffer.y + halfSize), mosaic.transform.rotation, transform) as GameObject;
-            rectList.Add(xOffer);
-        }
-
-        if (!isInYFilledZone(point))
-        {
-            Rect yOffer = findYClosestRect(point);
-            GameObject newMosaicY = Instantiate(mosaic, new Vector3(yOffer.x + halfSize, transform.position.y, yOffer.y + halfSize), mosaic.transform.rotation, transform) as GameObject;
-            rectList.Add(yOffer);
-        }
-
-        if (!isInFilledZone(point))
-        {
-            //Debug.Log("not contains");
-            Rect cOffer = Rect.zero;
-            switch (corner) {
-                case Corners.leftBot:
-                    cOffer = new Rect(new Vector2(roundToStep(point.x) - halfSize, roundToStep(point.y) - halfSize), new Vector2(sideSize, sideSize));
-                    break;
-                case Corners.rightBot:
-                    cOffer = new Rect(new Vector2(roundToStep(point.x), roundToStep(point.y) - halfSize), new Vector2(sideSize, sideSize));
-                    break;
-                case Corners.leftTop:
-                    cOffer = new Rect(new Vector2(roundToStep(point.x) - halfSize, roundToStep(point.y) ), new Vector2(sideSize, sideSize));
-                    break;
-                case Corners.rightTop:
-                    cOffer = new Rect(new Vector2(roundToStep(point.x), roundToStep(point.y)), new Vector2(sideSize, sideSize));
-                    break;
-
-            }
-            GameObject newMosaicC = Instantiate(mosaic, new Vector3(cOffer.x + halfSize, transform.position.y,  cOffer.y + halfSize), mosaic.transform.rotation, transform) as GameObject;
-            rectList.Add(cOffer);
-        }
-
     }
 
     // Update is called once per frame
     void Update () {
         int width = Camera.main.pixelWidth;
         int height = Camera.main.pixelHeight;
-        Ray rightTopRay = Camera.main.ScreenPointToRay(new Vector3(width, height, Camera.main.nearClipPlane));
-        Ray leftTopRay = Camera.main.ScreenPointToRay(new Vector3(0, height, Camera.main.nearClipPlane));
-        Ray rightBottomRay = Camera.main.ScreenPointToRay(new Vector3(width, 0, Camera.main.nearClipPlane));
-        Ray leftBottomRay = Camera.main.ScreenPointToRay(new Vector3(0, 0, Camera.main.nearClipPlane));
-        Vector3 hitPoint;
+        // leftTop, rightTop, rightBot, leftBot
+        Ray[] cornerRays = {
+            Camera.main.ScreenPointToRay(new Vector3(0, height, Camera.main.nearClipPlane)), 
+            Camera.main.ScreenPointToRay(new Vector3(width, height, Camera.main.nearClipPlane)),
+            Camera.main.ScreenPointToRay(new Vector3(width, 0, Camera.main.nearClipPlane)),
+            Camera.main.ScreenPointToRay(new Vector3(0, 0, Camera.main.nearClipPlane)),
+        };
+        Vector2[] cornerPoints = new Vector2[6];
+        int index = 0;
 
-        float distanceHit;
-        //Debug.Log("Right top");
-        eventPlane.Raycast(rightTopRay, out distanceHit);
-        hitPoint = rightTopRay.GetPoint(distanceHit);
-        instantiateNew(new Vector2(hitPoint.x, hitPoint.z), Corners.rightTop);
-        
-        eventPlane.Raycast(leftTopRay, out distanceHit);
-        hitPoint = leftTopRay.GetPoint(distanceHit);
-        instantiateNew(new Vector2(hitPoint.x, hitPoint.z), Corners.leftTop);
+        foreach(Ray ray in cornerRays)
+        {
+            float hitDistance;
+            Vector3 hitPoint;
+            
+            eventPlane.Raycast(ray, out hitDistance);
+            hitPoint = ray.GetPoint(hitDistance);
 
-        eventPlane.Raycast(rightBottomRay, out distanceHit);
-        hitPoint = rightBottomRay.GetPoint(distanceHit);
-        instantiateNew(new Vector2(hitPoint.x, hitPoint.z), Corners.rightBot);
+            float x = (index == 0 || index == 3 || index == 5) ? (Mathf.Ceil(hitPoint.x / sideSize) - 1) * sideSize : (Mathf.Floor(hitPoint.x / sideSize) + 1) * sideSize;
+            float y = (index == 0 || index == 2) ? (Mathf.Ceil(hitPoint.z / sideSize) - 1) * sideSize : (Mathf.Floor(hitPoint.z / sideSize) + 1) * sideSize;
 
-        eventPlane.Raycast(leftBottomRay, out distanceHit);
-        hitPoint = leftBottomRay.GetPoint(distanceHit);
-        instantiateNew(new Vector2(hitPoint.x, hitPoint.z), Corners.leftBot);
+            cornerPoints[index] = new Vector2(x, y);
 
+            index += 1;
+        }
+
+        fillViewport(cornerPoints[0], cornerPoints[2], cornerPoints[2].x, cornerPoints[1].x);
     }
 }
