@@ -15,6 +15,7 @@ namespace SpaceEncounter
         public float cooldown = 10.0f;
         public float shootingAngleThreshold = 5.0f;
         public float power = 100.0f;
+        public float hittingRange = 100.0f;
 
         public override TurretModel Model()
         {
@@ -24,6 +25,7 @@ namespace SpaceEncounter
             model.shootingAngleThreshold = shootingAngleThreshold;
             model.projectile = projectile;
             model.power = power;
+            model.hittingRange = hittingRange;
 
             return model;
         }

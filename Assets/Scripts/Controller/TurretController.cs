@@ -32,11 +32,14 @@ namespace SpaceEncounter
 
         void UpdateDesiredHeading()
         {
-            if (Model.targetInfo == null)
+            if (Model.target == null)
             {
                 return;
             }
-            Vector3 desiredHeading = Model.targetInfo.location - View.transform.position;
+
+            TargetInfo info = Model.target.getTargetInfo();
+
+            Vector3 desiredHeading = info.Location - View.transform.position;
 
             Model.DesiredHeading = desiredHeading.normalized;
         }
@@ -59,7 +62,7 @@ namespace SpaceEncounter
 
         void TryToFire()
         {
-            if (Model.AllowFire && Vector3.Angle(Model.CurrentHeading, Model.DesiredHeading) < Model.shootingAngleThreshold)
+            if (Model.AllowFire && Vector3.Angle(Model.CurrentHeading, Model.DesiredHeading) < Model.shootingAngleThreshold && !Physics.Raycast(View.transform.position + transform.forward, Model.CurrentHeading, Model.hittingRange, targetingModel.allyLayer))
             {
                 Fire();
             }

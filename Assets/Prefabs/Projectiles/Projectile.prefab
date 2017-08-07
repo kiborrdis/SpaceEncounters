@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 54421459390123814}
   m_Layer: 0
   m_Name: Projectile
-  m_TagString: allyProj
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -187,6 +187,7 @@ TrailRenderer:
     numCapVertices: 0
     alignment: 0
     textureMode: 0
+    generateLightingData: 0
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
 --- !u!114 &114778417411501814

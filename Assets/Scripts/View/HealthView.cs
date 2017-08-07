@@ -11,8 +11,12 @@ namespace SpaceEncounter
 
         private void OnTriggerEnter(Collider other)
         {
-            Instantiate(hitPrefab, other.transform.position, other.transform.rotation);
+            if (!Model.vulnerableTo.Contains(other.tag))
+            {
+                return;
+            }
 
+            Instantiate(hitPrefab, other.transform.position, other.transform.rotation);
             Controller.onHit(1);
 
             other.gameObject.SetActive(false);

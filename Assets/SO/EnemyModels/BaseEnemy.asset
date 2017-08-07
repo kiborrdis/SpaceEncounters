@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   motionModel: {fileID: 11400000, guid: 6252c163369cdba42b18b9fc556d800d, type: 2}
   targetingModel: {fileID: 11400000, guid: 7dea14dcd9d63b94b9217c6dab6a4fef, type: 2}
-  fireDistance: 70
+  fireDistance: 300
   disengageDistance: 50
   disengageOnAproach: 0
   stopOnAproach: 1

@@ -8,12 +8,15 @@ namespace SpaceEncounter
     public class HealthModelFactory : ModelFactory<HealthModel>
     {
         public int startHealth;
+        //public LayerMask vulnerableTo;
+        public List<string> vulnerableTo;
 
         public override HealthModel Model()
         {
             HealthModel model = new HealthModel();
 
             model.health = startHealth;
+            model.vulnerableTo = vulnerableTo;
 
             return model;
         }

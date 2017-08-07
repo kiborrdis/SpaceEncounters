@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Name: ToughEnemyHealth
   m_EditorClassIdentifier: 
   startHealth: 5
+  vulnerableTo:
+  - Projectile

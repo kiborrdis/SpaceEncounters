@@ -17,3 +17,4 @@ MonoBehaviour:
   cooldown: 0.2
   shootingAngleThreshold: 5
   power: 100
+  hittingRange: 1000

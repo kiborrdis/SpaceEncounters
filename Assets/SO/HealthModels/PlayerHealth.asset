@@ -11,4 +11,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b761c7f291ddb7a4c9698fd9c1836e18, type: 3}
   m_Name: PlayerHealth
   m_EditorClassIdentifier: 
-  startHealth: 100
+  startHealth: 10000
+  vulnerableTo:
+  - Projectile

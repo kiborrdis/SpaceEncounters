@@ -30,7 +30,7 @@ namespace SpaceEncounter
         public bool allowFire = false;
         public int numberOfAllowedShots = 0;
 
-        public TargetingModel.TargetData targetInfo;
+        public ITarget target;
 
         private Vector3 currentHeading;
         private Vector3 originHeading;

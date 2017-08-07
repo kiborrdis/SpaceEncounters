@@ -7,21 +7,13 @@ namespace SpaceEncounter
     [CreateAssetMenu(menuName = "SO/TargetingModelFactory")]
     public class TargetingModelFactory : ModelFactory<TargetingModel>
     {
-        public enum TargetingType { Point, Target };
-
-        public TargetingType targetingType;
+        public LayerMask allyLayer;
 
         public override TargetingModel Model()
         {
-            TargetingModel model;
+            TargetingModel model = new TargetingModel();
 
-            if (targetingType == TargetingType.Point )
-            {
-                model = new PointTargetingModel();
-            } else
-            {
-                model = new TargetTargetingModel();
-            }
+            model.allyLayer = allyLayer;
 
             return model;
         }

@@ -49,7 +49,7 @@ public class CollisionSolver : TrajectorySolver
         float t = dy / (vmy - targetVelocity.z);
         float vmx = (dx + targetVelocity.x * t) / t;
         Vector3 collisionVelocity = new Vector3(vmx, 0, vmy);
-        Vector3 collisionPoint = new Vector3(vmx * t + position.x, 0, vmy * t + position.z);
+        Vector3 collisionPoint = new Vector3(position.x + (vmx + velocity.x) * t, 0, position.z + (vmy + velocity.z) * t);
 
         return new Trajectory(collisionVelocity, collisionPoint, 0);
     }

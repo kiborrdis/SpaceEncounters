@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4217306e46b633843bf1f4e35358d82a, type: 3}
   m_Name: PlayerMotion
   m_EditorClassIdentifier: 
-  maxSpeed: 80
+  maxSpeed: 100
   cruisingSpeed: 80
-  rotationSpeed: 45
-  accel: 110
+  rotationSpeed: 90
+  accel: 1000

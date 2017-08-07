@@ -6,38 +6,25 @@ namespace SpaceEncounter
 {
     public class TargetingModel : Model
     {
-        public class TargetData
-        {
-            public Vector3 location;
-            public Vector3 velocity;
-
-            public TargetData(Vector3 location, Vector3 velocity)
-            {
-                this.location = location;
-                this.velocity = velocity;
-            }
-        }
-
         protected List<TurretModel> turrets = new List<TurretModel>();
+        protected ITarget target;
 
-        protected virtual TargetData getTargetData()
-        {
-            return new TargetData(Vector3.zero, Vector3.zero);
-        }
+        public LayerMask allyLayer;
 
-        public TargetData TargetInfo
+        public ITarget Target
         {
             get
             {
-                return getTargetData();
+                return target;
             }
-        }
-
-        public void UpdateTurretTargeting()
-        {
-            foreach (TurretModel model in turrets)
+            set
             {
-                model.targetInfo = getTargetData();
+                target = value;
+
+                foreach (TurretModel model in turrets)
+                {
+                    model.target = value;
+                }
             }
         }
 

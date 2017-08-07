@@ -17,9 +17,9 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 8192
-  meshResolution: 0.4
-  edgeResolveIterations: 10
-  edgeDistanceThreshhold: 0.5
+  meshResolution: 1
+  edgeResolveIterations: 20
+  edgeDistanceThreshhold: 0.1
   borderDist: 0.2
   borderWidth: 1
   disableRendering: 0

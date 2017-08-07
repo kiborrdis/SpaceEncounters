@@ -12,7 +12,9 @@ namespace SpaceEncounter
         Rigidbody engine;
         GameObject player;
 
-        TargetTargetingModel targetingModel;
+        TargetingModel targetingModel;
+
+        bool targetSet = false;
 
         TargetingModel IModelHolder<TargetingModel>.Model
         {
@@ -44,7 +46,7 @@ namespace SpaceEncounter
         {
             base.Start();
 
-            targetingModel = (TargetTargetingModel)Model.targetingModel;
+            targetingModel = Model.targetingModel;
 
             player = GameObject.FindGameObjectWithTag("Player");
             Transform gunObj = transform.Find("EnemyGun");
@@ -59,8 +61,11 @@ namespace SpaceEncounter
                 return;
             }
 
-            targetingModel.target = player.transform;
-            targetingModel.UpdateTurretTargeting();
+            if (!targetSet)
+            {
+                targetingModel.Target = new MovingTargetModel(player.transform);
+                targetSet = true;
+            }
 
             Vector3 direction = (player.transform.position - transform.position).normalized;
             Vector3 desiredLocation = 0.75f * Model.fireDistance * (-1 * direction) + player.transform.position;
